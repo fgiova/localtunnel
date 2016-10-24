@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var lt_client = require('../client');
 var open_url = require('openurl');
+var fs = require('fs');
 
 var argv = require('yargs')
     .usage('Usage: $0 --port [num] <options>')
@@ -25,6 +26,14 @@ var argv = require('yargs')
         alias: 'port',
         describe: 'Internal http server port',
     })
+    .option('k', {
+        alias: 'key',
+        describe: 'Key file for authentication',
+    })
+    .option('u', {
+        alias: 'user',
+        describe: 'user for authentication',
+    })
     .require('port')
     .help('help', 'Show this help and exit')
     .version(require('../package').version)
@@ -36,11 +45,23 @@ if (typeof argv.port !== 'number') {
     process.exit(1);
 }
 
+if (( !argv.user && argv.key ) || ( argv.user && !argv.key ) ) {
+    require('yargs').showHelp();
+    console.error('user and key are needed for authentication');
+    process.exit(1);
+}
+
+if(argv.key){
+	if(!argv.key.startsWith("/"))
+		argv.key = fs.realpathSync(process.cwd()+"/"+argv.key);
+}
 var opt = {
     host: argv.host,
     port: argv.port,
     local_host: argv['local-host'],
     subdomain: argv.subdomain,
+    keyfile: argv.key,
+    user: argv.user,
 };
 
 lt_client(opt.port, opt, function(err, tunnel) {
