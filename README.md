@@ -32,6 +32,8 @@ Below are some common arguments. See `lt --help` for additional arguments
 
 * `--subdomain` request a named subdomain on the localtunnel server (default is random characters)
 * `--local-host` proxy to a hostname other than localhost
+* `--user` user for authentication
+* `--key` priv key for authentication
 
 ## API ##
 
@@ -61,6 +63,8 @@ tunnel.on('close', function() {
 
 * `subdomain` A *string* value requesting a specific subdomain on the proxy server. **Note** You may not actually receive this name depending on availablily.
 * `local_host` Proxy to this hostname instead of `localhost`. This will also cause the `Host` header to be re-written to this value in proxied requests.
+* `keyfile` RSA priv keyfile for JWT auths generation.
+* `user` JWT issuer.
 
 ### Tunnel
 
